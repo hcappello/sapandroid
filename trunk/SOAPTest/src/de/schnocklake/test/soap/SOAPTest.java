@@ -44,13 +44,13 @@ public class SOAPTest extends Activity {
 			connection.setHostnameVerifier(SoapUtils.getFakeHostnameVerifier());
 
 			Document responseDoc = SoapUtils.request(doc, connection,
-					"S0004428881", "Mantila1");
+					"s0000", "password");
 
 			// Document responseDoc = SoapUtils
 			// .request(
 			// doc,
 			// "http://crm.esworkplace.sap.com:80/sap/bc/srt/xip/sap/CRM_BTSQ_CUSTQTECRTRC?sap-client=800",
-			// "S0004428881", "Mantila1");
+			// "S000000", "password");
 
 			String QuoteNumber = "";
 			String BusinessDocumentProcessingResultCode = "";
@@ -120,7 +120,6 @@ public class SOAPTest extends Activity {
 				.addText("3028");
 
 		Element Item = CustomerQuote.addElement("Item");
-		Element Product = Item.addElement("Product");
 		Element EnteredProductInternalID = Product.addElement(
 		"EnteredProductInternalID").addText("ISA-0003");
 
