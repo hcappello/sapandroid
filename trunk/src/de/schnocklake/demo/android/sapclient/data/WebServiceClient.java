@@ -17,8 +17,8 @@ import android.util.Log;
 
 public class WebServiceClient implements OnSharedPreferenceChangeListener {
 	private String endpoint = "http://erp.esworkplace.sap.com/sap/bc/soap/rfc";
-	private String username = "S0004428881";
-	private String password = "Mantila1";
+	private String username = "S000000000"; //your es workplace user
+	private String password = "yourpassword";
 
 	public WebServiceClient(SharedPreferences sharedPrefs) {
 		setAll(
