@@ -119,8 +119,8 @@ public class SOAPTest extends Activity {
 		Element InternalID = BuyerParty.addElement("InternalID")
 				.addText("3028");
 
-		Element Product = CustomerQuote.addElement("Product");
 		Element Item = CustomerQuote.addElement("Item");
+		Element Product = Item.addElement("Product");
 		Element EnteredProductInternalID = Product.addElement(
 		"EnteredProductInternalID").addText("ISA-0003");
 
