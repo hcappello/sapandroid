@@ -94,7 +94,7 @@ public class SAPValueHelpSoapAdapter extends BaseAdapter implements Filterable {
 				String s = prefix.toString();
 				Log.i("search", s);
 
-				ArrayList<Customer> names = webServiceClient.searchCustomersTableKNA1(s,
+				ArrayList<Customer> names = webServiceClient.searchCustomersTableBUT000(s,
 						30);
 				newValues.addAll((ArrayList<Customer>) names);
 			}

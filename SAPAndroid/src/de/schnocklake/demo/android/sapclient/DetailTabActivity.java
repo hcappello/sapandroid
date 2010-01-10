@@ -86,7 +86,8 @@ public class DetailTabActivity extends TabActivity implements Runnable, OnClickL
 
 	@Override
 	public void run() {
-		customerDetail = webServiceClient.getCustomersDetail2(kunnr);
+//		customerDetail = webServiceClient.getCustomersDetail2(kunnr);
+		customerDetail = webServiceClient.getCustomersDetailCRM2(kunnr);
 		handler.sendEmptyMessage(0);
 	}
 
@@ -96,7 +97,14 @@ public class DetailTabActivity extends TabActivity implements Runnable, OnClickL
 			textView1.setText(Html.fromHtml(customerDetail[0]));
 			textView2.setText(Html.fromHtml(customerDetail[1]));
 			textView3.setText(Html.fromHtml(customerDetail[2]));
-			geoButton.setEnabled(true);
+			
+			if (!customerDetail[3].equalsIgnoreCase("")) {
+				geoButton.setEnabled(true);				
+			}
+			else {
+				geoButton.setEnabled(false);
+				geoButton.setVisibility(android.view.View.INVISIBLE);
+			}
 			pd.dismiss();
 		}
 	};
@@ -106,6 +114,7 @@ public class DetailTabActivity extends TabActivity implements Runnable, OnClickL
 		if (v == geoButton) {
 			String geoString = "geo:0,0?q=" + customerDetail[3];
 			geoString = geoString.replaceAll("\\s", "+");
+			geoString = geoString.replaceAll("-", "");
 			Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(geoString));
 			this.startActivity(i);
 			
