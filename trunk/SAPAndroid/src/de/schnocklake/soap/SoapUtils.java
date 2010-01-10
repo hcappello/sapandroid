@@ -1,0 +1,195 @@
+package de.schnocklake.soap;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
+
+import android.util.Log;
+
+public class SoapUtils {
+
+	public static Document request(Document document, String endPoint,
+			String username, String password) throws SoapException {
+		HttpURLConnection connection;
+		try {
+			connection = (HttpURLConnection) new URL(endPoint).openConnection();
+			return SoapUtils.request(document, connection, username, password);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return document;
+	}
+
+	public static Document request(Document document,
+			HttpURLConnection connection, String username, String password)
+			throws SoapException {
+		String request = document.asXML();
+
+		byte[] requestData = request.getBytes();
+		try {
+			connection.setUseCaches(false);
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+
+			if (username != null && password != null) {
+				StringBuffer buf = new StringBuffer(username);
+				buf.append(':').append(password);
+				byte[] raw = buf.toString().getBytes();
+				buf.setLength(0);
+				buf.append("Basic ");
+				org.kobjects.base64.Base64.encode(raw, 0, raw.length, buf);
+				connection.setRequestProperty("Authorization", buf.toString());
+			}
+
+			connection.setRequestProperty("User-Agent",
+					"Jakarta Commons-HttpClient/3.1");
+			connection.setRequestProperty("SOAPAction", "xyungeloesst");
+			connection.setRequestProperty("Content-Type", "text/xml");
+			connection.setRequestProperty("Connection", "close");
+			connection.setRequestProperty("Content-Length", ""
+					+ requestData.length);
+			connection.setRequestMethod("POST");
+			connection.connect();
+			OutputStream os = connection.getOutputStream();
+			String requestDump = new String(requestData);
+			Log.i("request", requestDump);
+			System.err.println(requestDump);
+			os.write(requestData, 0, requestData.length);
+			os.flush();
+			os.close();
+
+			InputStream is;
+			// connection.connect();
+			// is = connection.getInputStream();
+
+			try {
+				connection.connect();
+				is = connection.getInputStream();
+			} catch (IOException e) {
+				Log.i("SAP", "IOException");
+
+				is = connection.getErrorStream();
+				if (is == null) {
+					connection.disconnect();
+					throw (e);
+				}
+			}
+
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			byte[] buf = new byte[256];
+			while (true) {
+				int rd = is.read(buf, 0, 256);
+				if (rd == -1)
+					break;
+				bos.write(buf, 0, rd);
+			}
+			bos.flush();
+			buf = bos.toByteArray();
+			String responseDump = new String(buf);
+			System.err.println(responseDump);
+			is.close();
+			is = new ByteArrayInputStream(buf);
+
+			SAXReader reader = new SAXReader(); // dom4j SAXReader
+
+			Document responseDocument;
+
+			Log.i("vor parse", "vor parse");
+			responseDocument = reader.read(is);
+			Log.i("nach parse", "nach parse");
+			return responseDocument;
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		} catch (DocumentException e) {
+			e.printStackTrace();
+			return null;
+		} // dom4j Document
+	}
+
+	
+	private static TrustManager[] trustManagers;
+	public static class _FakeX509TrustManager implements
+			javax.net.ssl.X509TrustManager {
+		private static final X509Certificate[] _AcceptedIssuers = new X509Certificate[] {};
+
+		public void checkClientTrusted(X509Certificate[] arg0, String arg1)
+				throws CertificateException {
+		}
+
+		public void checkServerTrusted(X509Certificate[] arg0, String arg1)
+				throws CertificateException {
+		}
+
+		public boolean isClientTrusted(X509Certificate[] chain) {
+			return (true);
+		}
+
+		public boolean isServerTrusted(X509Certificate[] chain) {
+			return (true);
+		}
+
+		public X509Certificate[] getAcceptedIssuers() {
+			return (_AcceptedIssuers);
+		}
+	}
+
+	public static SSLSocketFactory getFakeSSLSocketFactory() {
+		javax.net.ssl.SSLContext context = null;
+		if (trustManagers == null) {
+			trustManagers = new javax.net.ssl.TrustManager[] { new _FakeX509TrustManager() };
+		}
+		try {
+			context = javax.net.ssl.SSLContext.getInstance("TLS");
+			context.init(null, trustManagers, new SecureRandom());
+		} catch (NoSuchAlgorithmException e) {
+			Log.e("allowAllSSL", e.toString());
+		} catch (KeyManagementException e) {
+			Log.e("allowAllSSL", e.toString());
+		}
+		// javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(context
+		// .getSocketFactory());
+		return context.getSocketFactory();
+
+	}
+
+	public static HostnameVerifier getFakeHostnameVerifier() {
+		return new HostnameVerifier() {
+			public boolean verify(String hostname, SSLSession session) {
+				return true;
+			}
+		};
+	}
+	
+	public static void allowAllSSL() {
+		javax.net.ssl.HttpsURLConnection
+.setDefaultHostnameVerifier(getFakeHostnameVerifier());
+	}
+
+}
