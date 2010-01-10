@@ -1,6 +1,7 @@
 package de.schnocklake.demo.android.sapclient.data;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -671,23 +672,43 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 		Document doc = createDocument(customerNumber);
 		String s = doc.asXML();
 		try {
-			HttpsURLConnection connection;
+			HttpURLConnection connection;
 
-			connection = (HttpsURLConnection) new URL(
-					"https://crm.esworkplace.sap.com:443/sap/bc/srt/xip/sap/CRM_BUPA_CUSTID_QR?sap-client=800")
+			connection = (HttpURLConnection) new URL(
+					"http://crm.esworkplace.sap.com:80/sap/bc/srt/xip/sap/CRM_BUPA_CUSTID_QR?sap-client=800")
 					.openConnection();
 
-			connection.setSSLSocketFactory(SoapUtils.getFakeSSLSocketFactory());
-			connection.setHostnameVerifier(SoapUtils.getFakeHostnameVerifier());
+//			connection.setSSLSocketFactory(SoapUtils.getFakeSSLSocketFactory());
+//			connection.setHostnameVerifier(SoapUtils.getFakeHostnameVerifier());
 
 			Document responseDoc = SoapUtils.request(doc, connection,
 					"s0004428881", "Mantila1");
-
+			connection.disconnect();
+//			
+//
+//			//HttpsURLConnection connection;
+//
+////			connection = (HttpsURLConnection) new URL(
+////			"https://crm.esworkplace.sap.com:443/sap/bc/srt/xip/sap/CRM_BUPA_CUSTID_QR?sap-client=800")
+////			.openConnection();
+//			connection = (HttpsURLConnection) new URL(
+//			"https://crm.esworkplace.sap.com:443/sap/bc/srt/xip/sap/CRM_BUPA_CUSTID_QR?sap-client=800")
+//			.openConnection();
+//
+//			connection.setSSLSocketFactory(SoapUtils.getFakeSSLSocketFactory());
+//			connection.setHostnameVerifier(SoapUtils.getFakeHostnameVerifier());
+//
+//			Document responseDoc2 = SoapUtils.request(doc, connection,
+//					"s0004428881", "Mantila1");
+//Sch			connection.disconnect();
+			
+			
+			
 			Node PostalAddress = responseDoc
 					.selectSingleNode("//Address/PostalAddress");
 			if (PostalAddress != null) {
-				String CityName = PostalAddress.selectSingleNode("CityName")
-						.getText();
+//				String CityName = PostalAddress.selectSingleNode("CityName")
+//						.getText();
 				List<Node> postalItems = PostalAddress.selectNodes("*");
 				for (Iterator<Node> postalIterator = postalItems.iterator(); postalIterator
 						.hasNext();) {

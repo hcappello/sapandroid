@@ -14,12 +14,24 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
@@ -40,6 +52,36 @@ public class SoapUtils {
 			e.printStackTrace();
 		}
 		return document;
+	}
+
+	public void postData() {
+		
+		
+		// Create a new HttpClient and Post Header
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppost = new HttpPost("http://www.yoursite.com/script.php");
+
+		((DefaultHttpClient)httpclient).getCredentialsProvider().setCredentials(
+	        new AuthScope("crm.esworkplace.sap.com", 80),
+	        new UsernamePasswordCredentials("s0004428881", "Mantila1")); 
+
+		
+		try {
+			// Add your data
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("id", "12345"));
+			nameValuePairs.add(new BasicNameValuePair("stringdata",
+					"AndDev is Cool!"));
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			
+			// Execute HTTP Post Request
+			HttpResponse response = httpclient.execute(httppost);
+
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+		}
 	}
 
 	public static Document request(Document document,
@@ -75,7 +117,6 @@ public class SoapUtils {
 			OutputStream os = connection.getOutputStream();
 			String requestDump = new String(requestData);
 			Log.i("request", requestDump);
-			System.err.println(requestDump);
 			os.write(requestData, 0, requestData.length);
 			os.flush();
 			os.close();
@@ -108,7 +149,7 @@ public class SoapUtils {
 			bos.flush();
 			buf = bos.toByteArray();
 			String responseDump = new String(buf);
-			System.err.println(responseDump);
+			Log.i("response", responseDump);
 			is.close();
 			is = new ByteArrayInputStream(buf);
 
@@ -117,10 +158,14 @@ public class SoapUtils {
 			Document responseDocument;
 
 			Log.i("vor parse", "vor parse");
+			System.err.println("!!!!!responseDump");
+			System.err.println("!!!!!responseDump");
+			System.err.println("!!!!!responseDump");
+			System.err.println(responseDump);
 			responseDocument = reader.read(is);
 			Log.i("nach parse", "nach parse");
+			connection.disconnect();
 			return responseDocument;
-
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			return null;
@@ -133,8 +178,8 @@ public class SoapUtils {
 		} // dom4j Document
 	}
 
-	
 	private static TrustManager[] trustManagers;
+
 	public static class _FakeX509TrustManager implements
 			javax.net.ssl.X509TrustManager {
 		private static final X509Certificate[] _AcceptedIssuers = new X509Certificate[] {};
@@ -186,10 +231,10 @@ public class SoapUtils {
 			}
 		};
 	}
-	
+
 	public static void allowAllSSL() {
 		javax.net.ssl.HttpsURLConnection
-.setDefaultHostnameVerifier(getFakeHostnameVerifier());
+				.setDefaultHostnameVerifier(getFakeHostnameVerifier());
 	}
 
 }

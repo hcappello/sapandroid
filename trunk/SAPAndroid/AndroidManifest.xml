@@ -14,13 +14,13 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-<!-- 
+
 		<activity android:name="DetailTabActivity">
 			<intent-filter>
 				<category android:name="android.intent.category.NORMAL"></category>
 			</intent-filter>
 		</activity>
-
+<!-- 
 		<activity android:name="de.schnocklake.demo.android.sapclient.chart.SplineActivity">
 			<intent-filter>
 				<category android:name="android.intent.category.NORMAL"></category>
