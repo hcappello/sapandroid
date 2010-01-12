@@ -56,26 +56,16 @@ public class SAPValueHelpSoapAdapter extends BaseAdapter implements Filterable {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view;
 		if (convertView == null) {
-//			view = mInflater.inflate(android.R.layout.simple_dropdown_item_1line, parent, false);
-
 			view = mInflater.inflate(de.schnocklake.demo.android.sapclient2.R.layout.simple_dropdown_item_2line, parent, false);
-			
-//			view = mInflater.inflate(R.layout., parent, false);
 		} else {
 			view = convertView;
 		}
 		
-//		TextView text = (TextView) view.findViewById(android.R.layout.simple_dropdown_item_1line);
-		
 		Customer customer = (Customer)getItem(position); 
 		
 		((TextView) view.findViewById(R.id.text1)).setText(customer.getName());
-//		((TextView) view.findViewById(R.id.text2)).setText(customer.getNumber() + ' ' + customer.getCity() + ' ' + customer.getStreet() );
 		((TextView) view.findViewById(R.id.text2)).setText(customer.getCity() + ',' + customer.getStreet() );
 		
-/*		TextView text = (TextView) view;
-		text.setText(((Customer)getItem(position)).getName());
-		*/
 		return view;
 	}
 	
