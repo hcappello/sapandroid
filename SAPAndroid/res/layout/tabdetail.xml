@@ -15,23 +15,18 @@
 				<Button android:text="Go to map" android:id="@+id/GeoButton"
 					android:layout_width="fill_parent" android:layout_height="wrap_content"></Button>
 				<TextView android:id="@+id/textview1" android:layout_width="fill_parent"
-					android:layout_height="wrap_content" android:text="this is another tab" />
+					android:layout_height="wrap_content" android:text="" />
 			</LinearLayout>
 			<TextView android:id="@+id/textview2" android:layout_width="fill_parent"
-				android:layout_height="fill_parent" android:text="this is another tab" />
+				android:layout_height="fill_parent" android:text="" />
 			<TextView android:id="@+id/textview3" android:layout_width="fill_parent"
-				android:layout_height="fill_parent" android:text="this is a third tab" />
+				android:layout_height="fill_parent" android:text="" />
 			<LinearLayout android:id="@+id/tab3"
 				android:orientation="vertical" android:layout_width="fill_parent"
 				android:layout_height="fill_parent">
-<!--  				<Button android:text="Customer Sales" android:id="@+id/SalesChart"
-					android:layout_width="fill_parent" android:layout_height="wrap_content"></Button>
- -->					
 				<TextView android:id="@+id/textview3" android:layout_width="fill_parent"
-					android:layout_height="wrap_content" android:text="this is another tab" />
+					android:layout_height="wrap_content" android:text="" />
 			</LinearLayout>
-
-
 		</FrameLayout>
 	</LinearLayout>
 </TabHost>

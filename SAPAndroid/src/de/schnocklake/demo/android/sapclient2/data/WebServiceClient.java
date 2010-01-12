@@ -318,21 +318,13 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 			request.addProperty("ROWCOUNT", maxCount + "");
 			request.addProperty("ROWSKIPS", "0");
 			request.addProperty("DELIMITER", ";");
-			request.addProperty("QUERY_TABLE", "BUT000");
+			request.addProperty("QUERY_TABLE", "BBPV_BUPA_ADDR");
 			request.addProperty("DATA", null);
 
 			SoapObject fields = new SoapObject(NAMESPACE, "FIELDS");
 			request.addProperty("FIELDS", fields);
 
 			SoapObject fieldsitem;
-			fieldsitem = new SoapObject(NAMESPACE, "item");
-			fieldsitem.addProperty("FIELDNAME", "NAME_FIRST");
-			fields.addProperty("item", fieldsitem);
-
-			fieldsitem = new SoapObject(NAMESPACE, "item");
-			fieldsitem.addProperty("FIELDNAME", "NAME_LAST");
-			fields.addProperty("item", fieldsitem);
-
 			fieldsitem = new SoapObject(NAMESPACE, "item");
 			fieldsitem.addProperty("FIELDNAME", "PARTNER");
 			fields.addProperty("item", fieldsitem);
@@ -345,6 +337,22 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 			fieldsitem.addProperty("FIELDNAME", "MC_NAME2");
 			fields.addProperty("item", fieldsitem);
 
+			fieldsitem = new SoapObject(NAMESPACE, "item");
+			fieldsitem.addProperty("FIELDNAME", "NAME_ORG");
+			fields.addProperty("item", fieldsitem);
+
+			fieldsitem = new SoapObject(NAMESPACE, "item");
+			fieldsitem.addProperty("FIELDNAME", "MC_CITY");
+			fields.addProperty("item", fieldsitem);
+			
+			fieldsitem = new SoapObject(NAMESPACE, "item");
+			fieldsitem.addProperty("FIELDNAME", "MC_STREET");
+			fields.addProperty("item", fieldsitem);
+			
+			fieldsitem = new SoapObject(NAMESPACE, "item");
+			fieldsitem.addProperty("FIELDNAME", "POST_CODE");
+			fields.addProperty("item", fieldsitem);
+			
 			SoapObject SELOPT_TAB = new SoapObject(NAMESPACE, "OPTIONS");
 			SoapObject item;
 
@@ -407,9 +415,10 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 				// String[] token2 = resultLine.split("\\;");
 				String[] token2 = split(resultLine, ';');
 				Log.i("resultLine", resultLine);
-				customer = new Customer(token2[0].trim() + " "
-						+ token2[1].trim(), token2[2].trim(), token2[2].trim(),
-						token2[3].trim());
+				//Customer(String name, String number, String city, String street) {
+				customer = new Customer(token2[1].trim() + " "
+						+ token2[2].trim(), token2[0].trim(), token2[4].trim(),
+						token2[5].trim());
 				// customer = new Customer(token2[0].trim(), token2[1].trim(),
 				// token2[2].trim(), token2[3].trim());
 				// customer = new Customer(token2[0].trim(), token2[0].trim(),
@@ -678,37 +687,34 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 					"http://crm.esworkplace.sap.com:80/sap/bc/srt/xip/sap/CRM_BUPA_CUSTID_QR?sap-client=800")
 					.openConnection();
 
-//			connection.setSSLSocketFactory(SoapUtils.getFakeSSLSocketFactory());
-//			connection.setHostnameVerifier(SoapUtils.getFakeHostnameVerifier());
+			// connection.setSSLSocketFactory(SoapUtils.getFakeSSLSocketFactory());
+			// connection.setHostnameVerifier(SoapUtils.getFakeHostnameVerifier());
 
 			Document responseDoc = SoapUtils.request(doc, connection,
 					"s0004428881", "Mantila1");
 			connection.disconnect();
-//			
-//
-//			//HttpsURLConnection connection;
-//
-////			connection = (HttpsURLConnection) new URL(
-////			"https://crm.esworkplace.sap.com:443/sap/bc/srt/xip/sap/CRM_BUPA_CUSTID_QR?sap-client=800")
-////			.openConnection();
-//			connection = (HttpsURLConnection) new URL(
-//			"https://crm.esworkplace.sap.com:443/sap/bc/srt/xip/sap/CRM_BUPA_CUSTID_QR?sap-client=800")
-//			.openConnection();
-//
-//			connection.setSSLSocketFactory(SoapUtils.getFakeSSLSocketFactory());
-//			connection.setHostnameVerifier(SoapUtils.getFakeHostnameVerifier());
-//
-//			Document responseDoc2 = SoapUtils.request(doc, connection,
-//					"s0004428881", "Mantila1");
-//Sch			connection.disconnect();
-			
-			
-			
+			//			
+			//
+			// //HttpsURLConnection connection;
+			//
+			// // connection = (HttpsURLConnection) new URL(
+			// //
+			// "https://crm.esworkplace.sap.com:443/sap/bc/srt/xip/sap/CRM_BUPA_CUSTID_QR?sap-client=800")
+			// // .openConnection();
+			// connection = (HttpsURLConnection) new URL(
+			// "https://crm.esworkplace.sap.com:443/sap/bc/srt/xip/sap/CRM_BUPA_CUSTID_QR?sap-client=800")
+			// .openConnection();
+			//
+			// connection.setSSLSocketFactory(SoapUtils.getFakeSSLSocketFactory());
+			// connection.setHostnameVerifier(SoapUtils.getFakeHostnameVerifier());
+			//
+			// Document responseDoc2 = SoapUtils.request(doc, connection,
+			// "s0004428881", "Mantila1");
+			// Sch connection.disconnect();
+
 			Node PostalAddress = responseDoc
 					.selectSingleNode("//Address/PostalAddress");
 			if (PostalAddress != null) {
-//				String CityName = PostalAddress.selectSingleNode("CityName")
-//						.getText();
 				List<Node> postalItems = PostalAddress.selectNodes("*");
 				for (Iterator<Node> postalIterator = postalItems.iterator(); postalIterator
 						.hasNext();) {
@@ -719,20 +725,26 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 							.contains(postalItem.getName())) {
 						customerAddressGeoSearch = customerAddressGeoSearch
 								+ postalItem.getText() + " ";
+						customerAddress = customerAddress 
+								+ postalItem.getText() + "<br>";
 					}
 					Log.i("customerAddressGeoSearch", customerAddressGeoSearch);
 				}
 			}
 
-			Node DeviatingFullName = responseDoc.selectSingleNode(
-					"//Common/Person/Name/DeviatingFullName");
-
+			Node InternalID = responseDoc
+					.selectSingleNode("//BusinessPartner/InternalID");
+			if (InternalID != null) {
+				customerGeneral = InternalID.getText() + "<br>";
+			}
+			Node DeviatingFullName = responseDoc
+					.selectSingleNode("//Common/Person/Name/DeviatingFullName");
 			if (DeviatingFullName != null) {
-				customerGeneral = DeviatingFullName.getText();
+				customerGeneral = customerGeneral + " " + DeviatingFullName.getText() + "<br>";
 			}
 			// return new String[] { customerAddress, customerGeneral,
 			// customerBank, customerAddressGeoSearch };
-			return new String[] { customerGeneral, customerGeneral,
+			return new String[] { customerAddress, customerGeneral,
 					customerGeneral, customerAddressGeoSearch };
 
 		} catch (SoapException e) {
