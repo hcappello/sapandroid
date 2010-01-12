@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="de.schnocklake.demo.android.sapclient" android:versionName="0.91" android:versionCode="11">
+	package="de.schnocklake.demo.android.sapclient2" android:versionName="0.93" android:versionCode="13">
 
 	<uses-sdk android:minSdkVersion="3" />
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
@@ -20,8 +20,11 @@
 				<category android:name="android.intent.category.NORMAL"></category>
 			</intent-filter>
 		</activity>
+		
+		<meta-data android:value="a14b1528773b411" android:name="ADMOB_PUBLISHER_ID" />
+			
 <!-- 
-		<activity android:name="de.schnocklake.demo.android.sapclient.chart.SplineActivity">
+		<activity android:name="de.schnocklake.demo.android.sapclient2.chart.SplineActivity">
 			<intent-filter>
 				<category android:name="android.intent.category.NORMAL"></category>
 			</intent-filter>
