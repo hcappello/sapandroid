@@ -50,10 +50,11 @@ public class ValueHelpActivity extends Activity implements
 			this.setWebServiceClient(new WebServiceClient(PreferenceManager.getDefaultSharedPreferences(this)));
 		}		
 		adapter.setWebServiceClient(this.getWebServiceClient());
-	    example_message = (TextView) findViewById(R.id.AdTextView);
-	    example_message.setText("");
+//	    example_message = (TextView) findViewById(R.id.AdTextView);
+//	    example_message.setText("");
 	    example_adview = (AdView) findViewById(R.id.ad);
 	    example_adview.setVisibility(AdView.VISIBLE);
+	    example_adview.setKeywords("Android application");
 	  }
 	  private TextView example_message;
 	  private AdView example_adview;
