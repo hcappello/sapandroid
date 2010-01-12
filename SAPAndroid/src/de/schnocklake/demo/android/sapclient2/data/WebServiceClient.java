@@ -344,15 +344,15 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 			fieldsitem = new SoapObject(NAMESPACE, "item");
 			fieldsitem.addProperty("FIELDNAME", "MC_CITY");
 			fields.addProperty("item", fieldsitem);
-			
+
 			fieldsitem = new SoapObject(NAMESPACE, "item");
 			fieldsitem.addProperty("FIELDNAME", "MC_STREET");
 			fields.addProperty("item", fieldsitem);
-			
+
 			fieldsitem = new SoapObject(NAMESPACE, "item");
 			fieldsitem.addProperty("FIELDNAME", "POST_CODE");
 			fields.addProperty("item", fieldsitem);
-			
+
 			SoapObject SELOPT_TAB = new SoapObject(NAMESPACE, "OPTIONS");
 			SoapObject item;
 
@@ -415,7 +415,8 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 				// String[] token2 = resultLine.split("\\;");
 				String[] token2 = split(resultLine, ';');
 				Log.i("resultLine", resultLine);
-				//Customer(String name, String number, String city, String street) {
+				// Customer(String name, String number, String city, String
+				// street) {
 				customer = new Customer(token2[1].trim() + " "
 						+ token2[2].trim(), token2[0].trim(), token2[4].trim(),
 						token2[5].trim());
@@ -725,7 +726,7 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 							.contains(postalItem.getName())) {
 						customerAddressGeoSearch = customerAddressGeoSearch
 								+ postalItem.getText() + " ";
-						customerAddress = customerAddress 
+						customerAddress = customerAddress
 								+ postalItem.getText() + "<br>";
 					}
 					Log.i("customerAddressGeoSearch", customerAddressGeoSearch);
@@ -737,15 +738,24 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 			if (InternalID != null) {
 				customerGeneral = InternalID.getText() + "<br>";
 			}
+
+			Node FirstLineName = responseDoc
+					.selectSingleNode("//Common/Organisation/Name/FirstLineName");
+			if (FirstLineName != null) {
+				customerGeneral = customerGeneral + " "
+						+ FirstLineName.getText() + "<br>";
+			}
 			Node DeviatingFullName = responseDoc
 					.selectSingleNode("//Common/Person/Name/DeviatingFullName");
 			if (DeviatingFullName != null) {
-				customerGeneral = customerGeneral + " " + DeviatingFullName.getText() + "<br>";
+				customerGeneral = customerGeneral + " "
+						+ DeviatingFullName.getText() + "<br>";
 			}
+
 			// return new String[] { customerAddress, customerGeneral,
 			// customerBank, customerAddressGeoSearch };
 			return new String[] { customerAddress, customerGeneral,
-					customerGeneral, customerAddressGeoSearch };
+					"", customerAddressGeoSearch };
 
 		} catch (SoapException e) {
 			e.printStackTrace();

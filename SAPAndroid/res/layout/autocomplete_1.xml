@@ -11,26 +11,29 @@
 		License.
 	-->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res/de.schnocklake.demo.android.sapclient2"
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="wrap_content">
 
-	<TextView android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:text="@string/autocomplete_1_instructions" />
 
-	<LinearLayout android:orientation="horizontal"
-		android:layout_width="fill_parent" android:layout_height="wrap_content">
-
-
+	<LinearLayout android:id="@+id/LinearLayout01"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:orientation="vertical">
 		<TextView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:text="@string/autocomplete_1_customer" />
+			android:layout_height="wrap_content" android:text="@string/autocomplete_1_instructions" />
+		<LinearLayout android:orientation="horizontal"
+			android:layout_width="fill_parent" android:layout_height="wrap_content">
 
-		<AutoCompleteTextView android:id="@+id/edit"
-			android:layout_width="fill_parent" android:layout_height="wrap_content" />
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/autocomplete_1_customer" />
 
-	</LinearLayout>
-	
+			<AutoCompleteTextView android:id="@+id/edit"
+				android:layout_width="fill_parent" android:layout_height="wrap_content" />
+
+		</LinearLayout>
+	</LinearLayout>			
+	<!--
 	<TextView android:id="@+id/AdTextView"
 		android:text="hallo"
 		android:visibility="visible" 
@@ -38,17 +41,14 @@
 		android:layout_height="wrap_content" 
 	 android:textColor="#88ffffff"
 		android:textSize="24sp" />
-
-
-
+-->
 	<!-- Place an AdMob ad at the bottom of the screen. -->
 	<!-- It has white text on a black background. -->
 	<!-- The description of the surrounding context is 'Android game'. -->
 	<com.admob.android.ads.AdView android:id="@+id/ad"
 		android:visibility="gone" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:layout_alignParentBottom="true"
-		app:backgroundColor="#000000" app:textColor="#FFFFFF" app:keywords="SAP ERP CRM Oracle Siebel Fun"
-		
+		app:backgroundColor="#000000" app:textColor="#FFFFFF" app:keywords="Android application"		
 		/>
 	<!--
 		We could append app:testing="true" above to always get the test ad
@@ -56,4 +56,6 @@
 	-->
 
 
-</LinearLayout>
+
+
+</RelativeLayout>
