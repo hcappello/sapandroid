@@ -37,7 +37,7 @@ public class CRMCreateQuoteActivity extends Activity  {
 			this.setWebServiceClient(new WebServiceClient(PreferenceManager.getDefaultSharedPreferences(this)));
 		}	
 		
-		this.webServiceClient.createCRMQuote();
+//		this.webServiceClient.createCRMQuote();
 	}
 
 	@Override
