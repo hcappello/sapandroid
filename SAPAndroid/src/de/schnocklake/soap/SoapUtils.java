@@ -8,30 +8,17 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
@@ -54,35 +41,6 @@ public class SoapUtils {
 		return document;
 	}
 
-	public void postData() {
-		
-		
-		// Create a new HttpClient and Post Header
-		HttpClient httpclient = new DefaultHttpClient();
-		HttpPost httppost = new HttpPost("http://www.yoursite.com/script.php");
-
-		((DefaultHttpClient)httpclient).getCredentialsProvider().setCredentials(
-	        new AuthScope("crm.esworkplace.sap.com", 80),
-	        new UsernamePasswordCredentials("s0004428881", "Mantila1")); 
-
-		
-		try {
-			// Add your data
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("id", "12345"));
-			nameValuePairs.add(new BasicNameValuePair("stringdata",
-					"AndDev is Cool!"));
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			
-			// Execute HTTP Post Request
-			HttpResponse response = httpclient.execute(httppost);
-
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-		}
-	}
 
 	public static Document request(Document document,
 			HttpURLConnection connection, String username, String password)

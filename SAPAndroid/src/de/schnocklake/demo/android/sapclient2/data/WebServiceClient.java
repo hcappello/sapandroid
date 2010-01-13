@@ -98,10 +98,12 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 
 	@SuppressWarnings("unchecked")
 	public String[] getCustomersDetailCRM2(String customerNumber) {
-		String customerAddress = "", customerGeneral = "", customerBank = "", customerAddressGeoSearch = "";
+		String customerAddress = "", customerGeneral = "", 
+//		customerBank = "", 
+		customerAddressGeoSearch = "";
 
 		Document doc = createCustomerDetailCRMRequest(customerNumber);
-		String s = doc.asXML();
+//		String s = doc.asXML();
 		try {
 			HttpURLConnection connection;
 
@@ -192,8 +194,6 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 	@SuppressWarnings("unchecked")
 	public ArrayList<Customer> searchCustomersTableBUT000_2(String namePattern,
 			int maxCount) {
-		String METHOD_NAME = "RFC_READ_TABLE";
-		String NAMESPACE = "urn:sap-com:document:sap:rfc:functions";
 
 		ArrayList<Customer> names = new ArrayList<Customer>();
 
@@ -233,7 +233,7 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 						"MC_CITY", "MC_STREET", "POST_CODE" },
 				options);
 		Log.w("time", "createRFCReadTableRequestRequest2 took " + StopWatch.getTime());
-		String req = request.asXML();
+//		String req = request.asXML();
 		
 		try {
 			HttpURLConnection connection;
@@ -248,7 +248,7 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 			Log.w("time", "createRFCReadTableRequestRequest2 request took " + StopWatch.getTime());
 			connection.disconnect();
 
-			String x = responseDoc.asXML();
+//			String x = responseDoc.asXML();
 			
 			List<Node> dataItems = responseDoc.selectNodes("//DATA/item");
 			Log.w("time", "responseDoc.selectNodes(\"//DATA/item\"); took " + StopWatch.getTime());
@@ -281,19 +281,23 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 
 	public Document createRFCReadTableRequestRequest2(String table, int maxCount, 
 			String fields[], String options[]) {
+		String METHOD_NAME = "RFC_READ_TABLE";
+		String NAMESPACE = "urn:sap-com:document:sap:rfc:functions";
+
 		DocumentFactory factory = DocumentFactory.getInstance();
 
 		Document document = factory.createDocument();
 
 		Element Envelope = document.addElement(factory.createQName("Envelope",
 				"soapenv", "http://schemas.xmlsoap.org/soap/envelope/"));
-		Element header = Envelope.addElement(factory.createQName("Header",
+		//Element header = 
+		Envelope.addElement(factory.createQName("Header",
 				"soapenv", "http://schemas.xmlsoap.org/soap/envelope/"));
 		Element Body = Envelope.addElement(factory.createQName("Body",
 				"soapenv", "http://schemas.xmlsoap.org/soap/envelope/"));
 		Element RFC_READ_TABLE = Body.addElement(factory.createQName(
-				"RFC_READ_TABLE", "urn",
-				"urn:sap-com:document:sap:rfc:functions"));
+				METHOD_NAME, "urn",
+				NAMESPACE));
 
 		RFC_READ_TABLE.addElement("ROWCOUNT").addText("" + maxCount);
 		RFC_READ_TABLE.addElement("ROWSKIPS").addText("0");
