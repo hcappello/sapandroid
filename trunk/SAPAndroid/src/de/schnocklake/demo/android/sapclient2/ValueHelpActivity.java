@@ -1,13 +1,10 @@
 package de.schnocklake.demo.android.sapclient2;
 
-import com.admob.android.ads.AdView;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -15,8 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.TextView;
-import de.schnocklake.demo.android.sapclient2.R;
+
+import com.admob.android.ads.AdView;
+
 import de.schnocklake.demo.android.sapclient2.data.Customer;
 import de.schnocklake.demo.android.sapclient2.data.SAPValueHelpSoapAdapter;
 import de.schnocklake.demo.android.sapclient2.data.WebServiceClient;
@@ -50,14 +48,13 @@ public class ValueHelpActivity extends Activity implements
 			this.setWebServiceClient(new WebServiceClient(PreferenceManager.getDefaultSharedPreferences(this)));
 		}		
 		adapter.setWebServiceClient(this.getWebServiceClient());
-//	    example_message = (TextView) findViewById(R.id.AdTextView);
-//	    example_message.setText("");
-	    example_adview = (AdView) findViewById(R.id.ad);
-	    example_adview.setVisibility(AdView.VISIBLE);
-	    example_adview.setKeywords("Android application");
+
+		adview = (AdView) findViewById(R.id.ad);
+	    adview.setVisibility(AdView.VISIBLE);
+	    adview.setKeywords("Android application");
 	  }
-	  private TextView example_message;
-	  private AdView example_adview;
+
+	  private AdView adview;
 
 
 	@Override

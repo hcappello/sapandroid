@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="de.schnocklake.demo.android.sapclient2" android:versionCode="16" android:versionName="0.96">
+	package="de.schnocklake.demo.android.sapclient2" android:versionName="0.97" android:versionCode="17">
 
 	<uses-sdk android:minSdkVersion="3" />
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
@@ -23,21 +23,6 @@
 		</activity>
 
 		<meta-data android:value="a14b1528773b411" android:name="ADMOB_PUBLISHER_ID" />
-
-		<!--
-			<activity
-			android:name="de.schnocklake.demo.android.sapclient2.chart.SplineActivity">
-			<intent-filter> <category
-			android:name="android.intent.category.NORMAL"></category>
-			</intent-filter> </activity> <activity
-			android:name=".EditPreferences" android:label="@string/app_name">
-			</activity> <activity android:name="CRMCreateQuoteActivity"
-			android:label="CRMCreateQuoteActivity" android:icon="@drawable/welt">
-			<intent-filter> <action android:name="android.intent.action.MAIN" />
-			<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter> </activity>
-		-->
-
 
 	</application>
 
