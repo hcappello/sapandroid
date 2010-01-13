@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="soapRequestCustomerDetailCRM">&lt;v:Envelope xmlns:i=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:d=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:c=&quot;http://schemas.xmlsoap.org/soap/encoding/&quot; xmlns:v=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+   &lt;v:Header/&gt;
+   &lt;v:Body&gt;
+      &lt;n0:RFC_READ_TABLE id=&quot;o0&quot; c:root=&quot;1&quot; xmlns:n0=&quot;urn:sap-com:document:sap:rfc:functions&quot;&gt;
+         &lt;ROWCOUNT i:type=&quot;d:string&quot;&gt;30&lt;/ROWCOUNT&gt;
+         &lt;ROWSKIPS i:type=&quot;d:string&quot;&gt;0&lt;/ROWSKIPS&gt;
+         &lt;DELIMITER i:type=&quot;d:string&quot;&gt;;&lt;/DELIMITER&gt;
+         &lt;QUERY_TABLE i:type=&quot;d:string&quot;&gt;BBPV_BUPA_ADDR&lt;/QUERY_TABLE&gt;
+         &lt;DATA i:null=&quot;true&quot;/&gt;
+         &lt;FIELDS i:type=&quot;n0:FIELDS&quot;&gt;
+            &lt;item i:type=&quot;n0:item&quot;&gt;
+               &lt;FIELDNAME i:type=&quot;d:string&quot;&gt;NAME_ORG&lt;/FIELDNAME&gt;
+            &lt;/item&gt;
+            &lt;item i:type=&quot;n0:item&quot;&gt;
+               &lt;FIELDNAME i:type=&quot;d:string&quot;&gt;PARTNER&lt;/FIELDNAME&gt;
+            &lt;/item&gt;
+            &lt;item i:type=&quot;n0:item&quot;&gt;
+               &lt;FIELDNAME i:type=&quot;d:string&quot;&gt;MC_NAME1&lt;/FIELDNAME&gt;
+            &lt;/item&gt;
+            &lt;item i:type=&quot;n0:item&quot;&gt;
+               &lt;FIELDNAME i:type=&quot;d:string&quot;&gt;MC_NAME2&lt;/FIELDNAME&gt;
+            &lt;/item&gt;
+         &lt;/FIELDS&gt;
+         &lt;OPTIONS i:type=&quot;n0:OPTIONS&quot;&gt;
+            &lt;item i:type=&quot;n0:item&quot;&gt;
+               &lt;TEXT i:type=&quot;d:string&quot;&gt;( MC_NAME1 like 'SA%' OR MC_NAME1 like '% SA%'&lt;/TEXT&gt;
+            &lt;/item&gt;
+            &lt;item i:type=&quot;n0:item&quot;&gt;
+               &lt;TEXT i:type=&quot;d:string&quot;&gt;OR MC_NAME2 like 'SA%' OR MC_NAME2 like '% SA%' )&lt;/TEXT&gt;
+            &lt;/item&gt;
+         &lt;/OPTIONS&gt;
+      &lt;/n0:RFC_READ_TABLE&gt;
+   &lt;/v:Body&gt;
+&lt;/v:Envelope&gt;</string>
+</resources>
