@@ -22,7 +22,6 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportBasicAuthSE;
 
-import de.schnocklake.demo.android.sapclient2.StopWatch;
 import de.schnocklake.soap.SoapException;
 import de.schnocklake.soap.SoapUtils;
 
@@ -30,12 +29,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.util.Log;
 
-public class WebServiceClient implements OnSharedPreferenceChangeListener {
+public class CopyOfWebServiceClient2 implements OnSharedPreferenceChangeListener {
 	private String endpoint = "http://erp.esworkplace.sap.com/sap/bc/soap/rfc";
 	private String username = "S00000000";
 	private String password = "password";
 
-	public WebServiceClient(SharedPreferences sharedPrefs) {
+	public CopyOfWebServiceClient2(SharedPreferences sharedPrefs) {
 		setAll(
 				sharedPrefs
 						.getBoolean(
@@ -56,7 +55,7 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 		sharedPrefs.registerOnSharedPreferenceChangeListener(this);
 	}
 
-	public WebServiceClient(String endpoint, String username, String password) {
+	public CopyOfWebServiceClient2(String endpoint, String username, String password) {
 		this.endpoint = endpoint;
 		this.username = username;
 		this.password = password;
@@ -86,7 +85,7 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 		this.password = password;
 	}
 
-	public WebServiceClient(boolean demoserver, String endpoint,
+	public CopyOfWebServiceClient2(boolean demoserver, String endpoint,
 			String username, String password) {
 		setAll(demoserver, endpoint, username, password);
 	}
@@ -105,11 +104,209 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 		}
 	}
 
+	public ArrayList<Customer> searchCustomersTableADRC(String namePattern,
+			int maxCount) {
+		String METHOD_NAME = "RFC_READ_TABLE";
+		String NAMESPACE = "urn:sap-com:document:sap:rfc:functions";
+
+		ArrayList<Customer> names = new ArrayList<Customer>();
+
+		try {
+			SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+
+			request.addProperty("ROWCOUNT", maxCount + "");
+			request.addProperty("ROWSKIPS", "0");
+			request.addProperty("DELIMITER", ";");
+			request.addProperty("QUERY_TABLE", "ADRC");
+			request.addProperty("DATA", null);
+
+			SoapObject fields = new SoapObject(NAMESPACE, "FIELDS");
+			request.addProperty("FIELDS", fields);
+
+			SoapObject fieldsitem;
+			fieldsitem = new SoapObject(NAMESPACE, "item");
+			fieldsitem.addProperty("FIELDNAME", "NAME1");
+			fields.addProperty("item", fieldsitem);
+
+			fieldsitem = new SoapObject(NAMESPACE, "item");
+			fieldsitem.addProperty("FIELDNAME", "ADDRNUMBER");
+			fields.addProperty("item", fieldsitem);
+
+			SoapObject item = new SoapObject(NAMESPACE, "item");
+			item.addProperty("TEXT", "NAME1 like '" + namePattern
+					+ "%' OR NAME1 like '% " + namePattern + "%'");
+
+			SoapObject SELOPT_TAB = new SoapObject(NAMESPACE, "OPTIONS");
+			SELOPT_TAB.addProperty("item", item);
+			request.addProperty("OPTIONS", SELOPT_TAB);
+
+			// String s = request.toString();
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+					SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			HttpTransportBasicAuthSE androidHttpTransport = new HttpTransportBasicAuthSE(
+					endpoint, username, password);
+			Log.i("SAP", "vor androidHttpTransport");
+			androidHttpTransport.call(METHOD_NAME, envelope);
+
+			Log.i("SAP", "von envelope.bodyIn");
+
+			SoapObject so = (SoapObject) envelope.bodyIn;
+
+			SoapObject SALES_ORDERS = (SoapObject) so.getProperty("DATA");
+
+			String resultLine = "";
+			Customer customer;
+
+			for (int i = 0; i < SALES_ORDERS.getPropertyCount(); i++) {
+				SoapObject sales_order_so = (SoapObject) SALES_ORDERS
+						.getProperty(i);
+				resultLine = ((SoapPrimitive) sales_order_so.getProperty("WA"))
+						.toString();
+				String[] token = resultLine.split("\\;");
+				customer = new Customer(token[0].trim(), token[1].trim(), "",
+						"");
+				names.add(customer);
+			}
+			Log.i("SAP", "von return");
+			return names;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public ArrayList<Customer> searchCustomersTableKNA1(String namePattern,
+			int maxCount) {
+		String METHOD_NAME = "RFC_READ_TABLE";
+		String NAMESPACE = "urn:sap-com:document:sap:rfc:functions";
+
+		ArrayList<Customer> names = new ArrayList<Customer>();
+
+		try {
+			SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+
+			request.addProperty("ROWCOUNT", maxCount + "");
+			request.addProperty("ROWSKIPS", "0");
+			request.addProperty("DELIMITER", ";");
+			request.addProperty("QUERY_TABLE", "KNA1");
+			request.addProperty("DATA", null);
+
+			SoapObject fields = new SoapObject(NAMESPACE, "FIELDS");
+			request.addProperty("FIELDS", fields);
+
+			SoapObject fieldsitem;
+			fieldsitem = new SoapObject(NAMESPACE, "item");
+			fieldsitem.addProperty("FIELDNAME", "NAME1");
+			fields.addProperty("item", fieldsitem);
+
+			fieldsitem = new SoapObject(NAMESPACE, "item");
+			fieldsitem.addProperty("FIELDNAME", "KUNNR");
+			fields.addProperty("item", fieldsitem);
+
+			fieldsitem = new SoapObject(NAMESPACE, "item");
+			fieldsitem.addProperty("FIELDNAME", "ORT01");
+			fields.addProperty("item", fieldsitem);
+
+			fieldsitem = new SoapObject(NAMESPACE, "item");
+			fieldsitem.addProperty("FIELDNAME", "STRAS");
+			fields.addProperty("item", fieldsitem);
+
+			SoapObject SELOPT_TAB = new SoapObject(NAMESPACE, "OPTIONS");
+			SoapObject item;
+
+			String[] token = namePattern.split("\\ ");
+			String opt;
+
+			for (int i = 0; i < token.length; i++) {
+
+				opt = "NAME1 like '" + token[i] + "%' OR NAME1 like '% "
+						+ token[i] + "%'";
+				if (i > 0) {
+					opt = "AND ( " + opt;
+				} else {
+					opt = " ( " + opt;
+				}
+				item = new SoapObject(NAMESPACE, "item");
+				item.addProperty("TEXT", opt);
+				SELOPT_TAB.addProperty("item", item);
+
+				opt = "OR NAME1 like '" + token[i].toLowerCase()
+						+ "%' OR NAME1 like '% " + token[i].toLowerCase()
+						+ "%'";
+				item = new SoapObject(NAMESPACE, "item");
+				item.addProperty("TEXT", opt);
+				SELOPT_TAB.addProperty("item", item);
+
+				opt = "OR NAME1 like '" + token[i].toUpperCase()
+						+ "%' OR NAME1 like '% " + token[i].toUpperCase()
+						+ "%'";
+				item = new SoapObject(NAMESPACE, "item");
+				item.addProperty("TEXT", opt);
+				SELOPT_TAB.addProperty("item", item);
+
+				token[i] = token[i].substring(0, 1).toUpperCase()
+						+ token[i].substring(1, token[i].length())
+								.toLowerCase();
+				opt = "OR NAME1 like '" + token[i] + "%' OR NAME1 like '% "
+						+ token[i] + "%'";
+				item = new SoapObject(NAMESPACE, "item");
+				if (i > 0) {
+					opt = opt + " ) ";
+				} else {
+					opt = opt + " ) ";
+				}
+				item.addProperty("TEXT", opt);
+				SELOPT_TAB.addProperty("item", item);
+			}
+
+			request.addProperty("OPTIONS", SELOPT_TAB);
+
+			// String s = request.toString();
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+					SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			HttpTransportBasicAuthSE androidHttpTransport = new HttpTransportBasicAuthSE(
+					endpoint, username, password);
+			Log.i("SAP", "vor androidHttpTransport");
+			androidHttpTransport.call(METHOD_NAME, envelope);
+
+			Log.i("SAP", "von envelope.bodyIn");
+
+			SoapObject so = (SoapObject) envelope.bodyIn;
+
+			SoapObject SALES_ORDERS = (SoapObject) so.getProperty("DATA");
+
+			String resultLine = "";
+			Customer customer;
+
+			for (int i = 0; i < SALES_ORDERS.getPropertyCount(); i++) {
+				SoapObject sales_order_so = (SoapObject) SALES_ORDERS
+						.getProperty(i);
+				resultLine = ((SoapPrimitive) sales_order_so.getProperty("WA"))
+						.toString();
+				// String[] token2 = resultLine.split("\\;");
+				String[] token2 = split(resultLine, ';');
+				Log.i("resultLine", resultLine);
+				customer = new Customer(token2[0].trim(), token2[1].trim(),
+						token2[2].trim(), token2[3].trim());
+				// customer = new Customer(token2[0].trim(), token2[0].trim(),
+				// token2[0].trim(), token2[0].trim());
+				names.add(customer);
+			}
+			Log.i("SAP", "von return");
+			return names;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	public ArrayList<Customer> searchCustomersTableBUT000(String namePattern,
 			int maxCount) {
-		StopWatch.start();
-		
-		
 		String METHOD_NAME = "RFC_READ_TABLE";
 		String NAMESPACE = "urn:sap-com:document:sap:rfc:functions";
 
@@ -199,10 +396,7 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 			HttpTransportBasicAuthSE androidHttpTransport = new HttpTransportBasicAuthSE(
 					endpoint, username, password);
 			Log.i("SAP", "vor androidHttpTransport");
-			
-			Log.w("time", "bis vor request took " + StopWatch.getTime());
 			androidHttpTransport.call(METHOD_NAME, envelope);
-			Log.w("time", "nach request took " + StopWatch.getTime());
 
 			Log.i("SAP", "von envelope.bodyIn");
 
@@ -233,8 +427,6 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 				names.add(customer);
 			}
 			Log.i("SAP", "von return");
-			Log.w("time", "allet took " + StopWatch.getTime());
-
 			return names;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -487,7 +679,7 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 	public String[] getCustomersDetailCRM2(String customerNumber) {
 		String customerAddress = "", customerGeneral = "", customerBank = "", customerAddressGeoSearch = "";
 
-		Document doc = createCustomerDetailCRMRequest(customerNumber);
+		Document doc = createDocument(customerNumber);
 		String s = doc.asXML();
 		try {
 			HttpURLConnection connection;
@@ -562,8 +754,8 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 
 			// return new String[] { customerAddress, customerGeneral,
 			// customerBank, customerAddressGeoSearch };
-			return new String[] { customerAddress, customerGeneral, "",
-					customerAddressGeoSearch };
+			return new String[] { customerAddress, customerGeneral,
+					"", customerAddressGeoSearch };
 
 		} catch (SoapException e) {
 			e.printStackTrace();
@@ -574,140 +766,13 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	@SuppressWarnings("unchecked")
-	public ArrayList<Customer> searchCustomersTableBUT000_2(String namePattern,
-			int maxCount) {
-		String METHOD_NAME = "RFC_READ_TABLE";
-		String NAMESPACE = "urn:sap-com:document:sap:rfc:functions";
-
-		ArrayList<Customer> names = new ArrayList<Customer>();
-
-		Vector<String> optionsVector = new Vector<String>();
-		String[] token = namePattern.split("\\ ");
-		String opt;
-
-		for (int i = 0; i < token.length; i++) {
-			opt = "MC_NAME1 like '" + token[i].toUpperCase()
-					+ "%' OR MC_NAME1 like '% " + token[i].toUpperCase() + "%'";
-			if (i > 0) {
-				opt = "AND ( " + opt;
-			} else {
-				opt = " ( " + opt;
-			}
-
-			optionsVector.add(opt);
-
-			opt = "OR MC_NAME2 like '" + token[i].toUpperCase()
-					+ "%' OR MC_NAME2 like '% " + token[i].toUpperCase() + "%'";
-
-			if (i > 0) {
-				opt = opt + " ) ";
-			} else {
-				opt = opt + " ) ";
-			}
-			optionsVector.add(opt);
-		}
-		
-		String options[] = new String[optionsVector.size()];
-		optionsVector.copyInto(options);
-		
-//		String options[] = (String[]) optionsVector.toArray();
-		StopWatch.start();
-		Document request = createRFCReadTableRequestRequest2("BBPV_BUPA_ADDR", maxCount, 
-				new String[] { "PARTNER", "MC_NAME1", "MC_NAME2", "NAME_ORG",
-						"MC_CITY", "MC_STREET", "POST_CODE" },
-				options);
-		Log.w("time", "createRFCReadTableRequestRequest2 took " + StopWatch.getTime());
-		String req = request.asXML();
-		
-		try {
-			HttpURLConnection connection;
-
-			connection = (HttpURLConnection) new URL(endpoint).openConnection();
-
-			// connection.setSSLSocketFactory(SoapUtils.getFakeSSLSocketFactory());
-			// connection.setHostnameVerifier(SoapUtils.getFakeHostnameVerifier());
-
-			Document responseDoc = SoapUtils.request(request, connection,
-					username, password);
-			Log.w("time", "createRFCReadTableRequestRequest2 request took " + StopWatch.getTime());
-			connection.disconnect();
-
-			String x = responseDoc.asXML();
-			
-			List<Node> dataItems = responseDoc.selectNodes("//DATA/item");
-			Log.w("time", "responseDoc.selectNodes(\"//DATA/item\"); took " + StopWatch.getTime());
-			
-			for (Iterator<Node> dataIterator = dataItems.iterator(); dataIterator.hasNext();) {
-				String resultLine = dataIterator.next().selectSingleNode("WA").getText();
-
-				String[] token2 = split(resultLine, ';');
-				Log.i("resultLine", resultLine);
-				Customer customer = new Customer(token2[1].trim() + " "
-						+ token2[2].trim(), token2[0].trim(), token2[4].trim(),
-						token2[5].trim());
-				names.add(customer);
-			}
-			Log.w("time", "alles took " + StopWatch.getTime());
-			
-			return names;
-
-		} catch (SoapException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-
-	}
-
-	public Document createRFCReadTableRequestRequest2(String table, int maxCount, 
-			String fields[], String options[]) {
-		DocumentFactory factory = DocumentFactory.getInstance();
-
-		Document document = factory.createDocument();
-
-		Element Envelope = document.addElement(factory.createQName("Envelope",
-				"soapenv", "http://schemas.xmlsoap.org/soap/envelope/"));
-		Element header = Envelope.addElement(factory.createQName("Header",
-				"soapenv", "http://schemas.xmlsoap.org/soap/envelope/"));
-		Element Body = Envelope.addElement(factory.createQName("Body",
-				"soapenv", "http://schemas.xmlsoap.org/soap/envelope/"));
-		Element RFC_READ_TABLE = Body.addElement(factory.createQName(
-				"RFC_READ_TABLE", "urn",
-				"urn:sap-com:document:sap:rfc:functions"));
-
-		RFC_READ_TABLE.addElement("ROWCOUNT").addText("" + maxCount);
-		RFC_READ_TABLE.addElement("ROWSKIPS").addText("0");
-		RFC_READ_TABLE.addElement("DELIMITER").addText(";");
-		RFC_READ_TABLE.addElement("QUERY_TABLE").addText(table);
-		RFC_READ_TABLE.addElement("ROWCOUNT").addText("30");
-		RFC_READ_TABLE.addElement("DATA");
-
-		Element FIELDS = RFC_READ_TABLE.addElement("FIELDS");
-		for (String field : fields) {
-			FIELDS.addElement("item").addElement("FIELDNAME").addText(field);
-		}
-
-		Element OPTIONS = RFC_READ_TABLE.addElement("OPTIONS");
-		for (String option : options) {
-			OPTIONS.addElement("item").addElement("TEXT").addText(option);
-		}
-
-		return document;
 	}
 
 	@SuppressWarnings("unused")
-	public Document createCustomerDetailCRMRequest(String customerNumber) {
+	public Document createDocument(String customerNumber) {
 		DocumentFactory factory = DocumentFactory.getInstance();
 
 		Document document = factory.createDocument();
-
 		Element Envelope = document.addElement(factory.createQName("Envelope",
 				"soapenv", "http://schemas.xmlsoap.org/soap/envelope/"));
 		Element header = Envelope.addElement(factory.createQName("Header",
@@ -725,6 +790,27 @@ public class WebServiceClient implements OnSharedPreferenceChangeListener {
 				.addElement("BusinessPartnerSelectionByBusinessPartner");
 		BusinessPartnerSelectionByBusinessPartner.addElement("InternalID")
 				.addText(customerNumber);
+
+		//		
+		// Element ProcessingTypeCode = CustomerQuote.addElement(
+		// "ProcessingTypeCode").addText("AG");
+		// Element BuyerParty = CustomerQuote.addElement("BuyerParty");
+		// Element InternalID = BuyerParty.addElement("InternalID")
+		// .addText("3028");
+		//
+		// Element Item = CustomerQuote.addElement("Item");
+		// Element Product = Item.addElement("Product");
+		// Element EnteredProductInternalID = Product.addElement(
+		// "EnteredProductInternalID").addText("ISA-0003");
+		//
+		// Element ScheduleLine = Item.addElement("ScheduleLine");
+		// Element TypeCode = ScheduleLine.addElement("TypeCode").addText("CT");
+		// Element Quantity = ScheduleLine.addElement("Quantity").addAttribute(
+		// "unitCode", "CT").addText("10");
+		// Element DateTime = ScheduleLine.addElement("DateTime").addAttribute(
+		// "timeZoneCode", "CET").addAttribute(
+		// "daylightSavingTimeIndicator", "true").addText(
+		// "2009-10-18T16:32:33");
 
 		return document;
 	}
