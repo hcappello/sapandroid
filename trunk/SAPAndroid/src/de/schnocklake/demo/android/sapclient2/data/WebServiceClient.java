@@ -14,8 +14,8 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 
 import android.util.Log;
-import de.schnocklake.soap.SoapException;
-import de.schnocklake.soap.SoapUtils;
+import de.schnocklake.android.soap.SoapException;
+import de.schnocklake.android.soap.SoapUtils;
 
 public class WebServiceClient {
 	@SuppressWarnings("unused")
