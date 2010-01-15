@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="de.schnocklake.demo.android.sapclient2" android:versionName="0.97" android:versionCode="17">
+	package="de.schnocklake.demo.android.sapclient2" android:versionName="0.98" android:versionCode="18">
 
 	<uses-sdk android:minSdkVersion="3" />
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>

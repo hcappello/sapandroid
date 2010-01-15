@@ -15,39 +15,31 @@ import android.widget.AutoCompleteTextView;
 
 import com.admob.android.ads.AdView;
 
-import de.schnocklake.demo.android.sapclient2.data.Customer;
-import de.schnocklake.demo.android.sapclient2.data.SAPValueHelpSoapAdapter;
+import de.schnocklake.android.sap.searchhelp.SAPValueHelpSoapAdapter;
+import de.schnocklake.demo.android.sapclient2.data.CRMCustomerValueHelpAdapter;
+import de.schnocklake.demo.android.sapclient2.data.CRMProductValueHelpAdapter;
 import de.schnocklake.demo.android.sapclient2.data.WebServiceClient;
+import de.schnocklake.demo.android.sapclient2.data.CRMProductValueHelpAdapter.Product;
 
 public class ValueHelpActivity extends Activity implements
 		AdapterView.OnItemClickListener {
+	
+	public static final String PREFS_NAME = "ServerPrefs";
+
 	AutoCompleteTextView textView;
 
 	private final static int ABOUT_ITEM_ID = 1;
 	private final static int SETTINGS_ITEM_ID = 2;
 
-	private WebServiceClient webServiceClient;
-
-	public WebServiceClient getWebServiceClient() {
-		return webServiceClient;
-	}
-
-	public void setWebServiceClient(WebServiceClient webServiceClient) {
-		this.webServiceClient = webServiceClient;
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.autocomplete_1);
-		SAPValueHelpSoapAdapter adapter = new SAPValueHelpSoapAdapter(this);
+		SAPValueHelpSoapAdapter adapter = new CRMCustomerValueHelpAdapter(this);
+//		SAPValueHelpSoapAdapter adapter = new CRMProductValueHelpAdapter(this);
 		textView = (AutoCompleteTextView) findViewById(R.id.edit);
 		textView.setOnItemClickListener(this);
 		textView.setAdapter(adapter);
-		if (this.webServiceClient == null) {
-			this.setWebServiceClient(new WebServiceClient(PreferenceManager.getDefaultSharedPreferences(this)));
-		}		
-		adapter.setWebServiceClient(this.getWebServiceClient());
 
 		adview = (AdView) findViewById(R.id.ad);
 	    adview.setVisibility(AdView.VISIBLE);
@@ -65,19 +57,21 @@ public class ValueHelpActivity extends Activity implements
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		Customer customer = (Customer) textView.getAdapter().getItem(arg2);
-
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {		
 		Intent i = new Intent(this, DetailTabActivity.class);
+
+		CRMCustomerValueHelpAdapter.Customer customer = (CRMCustomerValueHelpAdapter.Customer) textView.getAdapter().getItem(arg2);		
 		i.putExtra("NAME1", customer.getName());
 		i.putExtra("KUNNR", customer.getNumber());
+//		CRMProductValueHelpAdapter.Product product = (CRMProductValueHelpAdapter.Product) textView.getAdapter().getItem(arg2);		
+//		i.putExtra("PRODUCT_ID", product.getPRODUCT_ID());
+//		i.putExtra("getSHTEXT_LARGE", product.getSHTEXT_LARGE());
 		this.startActivity(i);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu
-				.add(0, ABOUT_ITEM_ID, 0,
+		menu.add(0, ABOUT_ITEM_ID, 0,
 						getString(R.string.about_menu_item_title));
 		menu.add(0, SETTINGS_ITEM_ID, 0,
 				getString(R.string.settings_menu_item_title));
@@ -100,7 +94,6 @@ public class ValueHelpActivity extends Activity implements
 
 			result = builder.create();
 			break;
-
 		default:
 			result = super.onCreateDialog(id);
 			break;
@@ -116,9 +109,8 @@ public class ValueHelpActivity extends Activity implements
 			showDialog(ABOUT_ITEM_ID);
 			return true;
 		case SETTINGS_ITEM_ID:
-			startActivity(new Intent(this, EditPreferences.class));
+//			startActivity(new Intent(this, EditPreferences.class));
 			return true;
-
 		default:
 			return false;
 		}

@@ -8,14 +8,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TextView;
-import de.schnocklake.demo.android.sapclient2.R;
 import de.schnocklake.demo.android.sapclient2.data.WebServiceClient;
 
 public class DetailTabActivity extends TabActivity implements Runnable, OnClickListener {
@@ -79,7 +77,7 @@ public class DetailTabActivity extends TabActivity implements Runnable, OnClickL
 		pd = ProgressDialog.show(this, "Loading Customer '" + name1 + "'",
 				"Please wait...", true, false);
 
-		this.setWebServiceClient(new WebServiceClient(PreferenceManager.getDefaultSharedPreferences(this)));
+		this.setWebServiceClient(new WebServiceClient());
 		
 		Thread thread = new Thread(this);
 		thread.start();
@@ -87,7 +85,6 @@ public class DetailTabActivity extends TabActivity implements Runnable, OnClickL
 
 	@Override
 	public void run() {
-//		customerDetail = webServiceClient.getCustomersDetail2(kunnr);
 		customerDetail = webServiceClient.getCustomersDetailCRM2(kunnr);
 		handler.sendEmptyMessage(0);
 	}
