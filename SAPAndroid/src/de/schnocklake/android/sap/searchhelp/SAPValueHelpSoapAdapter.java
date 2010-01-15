@@ -22,9 +22,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import de.schnocklake.android.soap.SoapException;
+import de.schnocklake.android.soap.SoapUtils;
 import de.schnocklake.demo.android.sapclient2.StopWatch;
-import de.schnocklake.soap.SoapException;
-import de.schnocklake.soap.SoapUtils;
 
 public abstract class SAPValueHelpSoapAdapter extends BaseAdapter implements
 		Filterable {
