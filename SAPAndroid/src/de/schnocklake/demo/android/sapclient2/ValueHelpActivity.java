@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,9 +16,6 @@ import com.admob.android.ads.AdView;
 
 import de.schnocklake.android.sap.searchhelp.SAPValueHelpSoapAdapter;
 import de.schnocklake.demo.android.sapclient2.data.CRMCustomerValueHelpAdapter;
-import de.schnocklake.demo.android.sapclient2.data.CRMProductValueHelpAdapter;
-import de.schnocklake.demo.android.sapclient2.data.WebServiceClient;
-import de.schnocklake.demo.android.sapclient2.data.CRMProductValueHelpAdapter.Product;
 
 public class ValueHelpActivity extends Activity implements
 		AdapterView.OnItemClickListener {
