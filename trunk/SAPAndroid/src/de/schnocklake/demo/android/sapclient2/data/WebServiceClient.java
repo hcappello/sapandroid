@@ -13,13 +13,12 @@ import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 import org.dom4j.Node;
 
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.util.Log;
 import de.schnocklake.soap.SoapException;
 import de.schnocklake.soap.SoapUtils;
 
 public class WebServiceClient {
+	@SuppressWarnings("unused")
 	private String endpoint = "http://crm.esworkplace.sap.com/sap/bc/soap/rfc";
 	private String username = "s0004428881";
 	private String password = "Mantila1";
